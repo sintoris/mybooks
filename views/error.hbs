@@ -1,0 +1,14 @@
+<h1>myBooks <span style='color:#007bff;''>{{user}}</span>...</h1>
+<h2>τα βιβλία της παρέας μας</h2>
+
+<div class="row mt-5">
+    <div class="col-6 offset-3">
+        {{error}}
+        
+            {{#if user}}
+                <a class="nav-link" href="/logout">
+                    <button class="btn btn-primary logout-btn btn-block">Έξοδος</button>
+                </a>
+            {{/if}}
+    </div>
+</div>

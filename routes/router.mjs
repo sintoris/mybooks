@@ -1,16 +1,21 @@
 import express from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const controller = await import(`../controller/controller-${process.env.DB_MODEL}.mjs`);
 
 // database sqlite
-import getUser from '../controllers/sqlite/getUser.mjs';
-import getCreateUser from '../controllers/sqlite/getCreateUser.mjs';
-import getBooks from '../controllers/sqlite/getBooks.mjs';
-import about from '../controllers/sqlite/about.mjs';
-import create from '../controllers/sqlite/create.mjs';
-import createBook from '../controllers/sqlite/createBook.mjs';
-import findBook from '../controllers/sqlite/findBook.mjs';
-import updateBook from '../controllers/sqlite/updateBook.mjs';
-import findToDeleteBook from '../controllers/sqlite/findToDeleteBook.mjs';
-import deleteBook from '../controllers/sqlite/deleteBook.mjs';
+// import getUser from '../controllers/sqlite/getUser.mjs';
+// import getCreateUser from '../controllers/sqlite/getCreateUser.mjs';
+// import getBooks from '../controllers/sqlite/getBooks.mjs';
+// import about from '../controllers/sqlite/about.mjs';
+// import create from '../controllers/sqlite/create.mjs';
+// import createBook from '../controllers/sqlite/createBook.mjs';
+// import findBook from '../controllers/sqlite/findBook.mjs';
+// import updateBook from '../controllers/sqlite/updateBook.mjs';
+// import findToDeleteBook from '../controllers/sqlite/findToDeleteBook.mjs';
+// import deleteBook from '../controllers/sqlite/deleteBook.mjs';
 
 // database mongo
 // import getUser from '../controllers/mongo/getUser.mjs';
@@ -28,35 +33,35 @@ const router = express.Router();
 // const bookList = new BookList();
 
 const redirectHome = (req, res, next) => {
-   console.log('redirect...', req.session)
+   console.log('redirect...', req.session);
    if (!req.session.userID) {
-   res.redirect('/');
+      res.redirect('/');
    } else {
-   next();
-   } };
+      next();
+   }
+};
 
 const logout = (req, res) => {
-   console.log('logout...', req.session)
-   req.session.destroy(err => {
-   if (err) {
-      return res.redirect('/');
-   }
-   res.clearCookie('sid');
-   res.redirect('/');
+   console.log('logout...', req.session);
+   req.session.destroy((err) => {
+      if (err) {
+         return res.redirect('/');
+      }
+      res.clearCookie('sid');
+      res.redirect('/');
    });
 };
 
-
-router.get("/", getUser); // show user if connected
-router.post("/", getCreateUser); // get or create user
-router.get("/books", redirectHome, getBooks); // GET /books
-router.get("/about", about); // GET /about
-router.get("/create", redirectHome, create); // GET /create
-router.post("/create", redirectHome, createBook);   // POST /create
-router.get("/edit/:bookID", redirectHome, findBook); // GET /edit/:bookID
-router.post("/edit/:id", redirectHome, updateBook); // POST /edit/:bookID
-router.get("/delete/:id", redirectHome, findToDeleteBook);// GET /delete/:bookID
-router.post("/delete/:id", deleteBook);  // POST /delete/:bookID
-router.get("/logout", logout); // GET /logout
+router.get('/', (req, res, next) => {res.redirect("/books")}); // show user if connected
+router.post('/', controller.getCreateUser); // get or create user
+router.get('/books', controller.getBooks); // GET /books
+// router.get('/about', about); // GET /about
+// router.get('/create', redirectHome, create); // GET /create
+// router.post('/create', redirectHome, createBook); // POST /create
+// router.get('/edit/:bookID', redirectHome, findBook); // GET /edit/:bookID
+// router.post('/edit/:id', redirectHome, updateBook); // POST /edit/:bookID
+// router.get('/delete/:id', redirectHome, findToDeleteBook); // GET /delete/:bookID
+// router.post('/delete/:id', deleteBook); // POST /delete/:bookID
+// router.get('/logout', logout); // GET /logout
 
 export { router };
