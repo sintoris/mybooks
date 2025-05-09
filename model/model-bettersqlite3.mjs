@@ -1,13 +1,13 @@
+/*
+uses better-sqlite3 module
+npm install better-sqlite3
+*/
 import { default as bettersqlite3 } from 'better-sqlite3';
+
 const db = new bettersqlite3(`${import.meta.dirname}/../data/books.db`, { fileMustExist: true });
 
 // Prepared statements
 // ανάκτηση όλων των βιβλίων του χρήστη από τη βάση δεδομένων
-
-// const addNewBookStm = db.prepare('INSERT INTO Books (title, author, comment, user)  VALUES (?, ?, ?, ?)');
-// const findBookStm = db.prepare('SELECT * FROM Books WHERE bookID = ?');
-// const updateBookStm = db.prepare('UPDATE Books SET title = ?, author = ?, comment = ? WHERE (bookID = ?)');
-// const deleteBookStm = db.prepare('DELETE FROM Books WHERE bookID = ?');
 
 const getBooks = () => {
    try {
@@ -19,66 +19,55 @@ const getBooks = () => {
    }
 };
 
-const addNewBook = (book) => {
+const addBook = (book) => {
    try {
-      const result = addNewBookStm.run(book.title, book.author, book.comment, book.user);
+      const addBookStm = db.prepare('INSERT INTO Books (title, author, comment, user)  VALUES (?, ?, ?, ?)');
+      const result = addBookStm.run(book.title, book.author, book.comment, book.user);
       return result;
    } catch (err) {
-      console.error(err);
-      return null;
-   }
-};
-
-const findBook = (bookID) => {
-   try {
-      const row = findBookStm.get(bookID);
-      return row;
-   } catch (err) {
-      console.error(err);
-      return null;
-   }
-};
-
-const updateBook = (book) => {
-   try {
-      const result = updateBookStm.run(book.title, book.author, book.comment, book.bookID);
-      return result;
-   } catch (err) {
-      console.error(err);
-      return null;
+      throw err;
    }
 };
 
 const deleteBook = (bookID) => {
    try {
+      const deleteBookStm = db.prepare('DELETE FROM Books WHERE bookID = ?');
       const result = deleteBookStm.run(bookID);
       return result;
    } catch (err) {
-      console.error(err);
-      return null;
-   }
-};
-
-const insertUser = (userName) => {
-   try {
-      const insertUserStm = db.prepare('INSERT INTO Users(userName) VALUES (?)');
-      const result = insertUserStm.run(userName);
-      return result.lastInsertRowid;
-   } catch (err) {
-      console.error(err);
-      return null;
-   }
-};
-
-const findUser = (userID = null, userName = null) => {
-   try {
-      const findUserStm = db.prepare('SELECT * FROM Users WHERE UserID = ? OR UserName = ?');
-      const row = findUserStm.all(userID, userName);
-      return row;
-   } catch (err) {
-      console.error(err);
       throw err;
    }
 };
 
-export { getBooks, addNewBook, findBook, updateBook, deleteBook, insertUser, findUser };
+const getBook = (bookID) => {
+   try {
+      const getBookStm = db.prepare('SELECT * FROM Books WHERE bookID = ?');
+
+      const row = getBookStm.all(bookID);
+      return row[0];
+   } catch (err) {
+      throw err;
+   }
+};
+
+const editBook = (book) => {
+   try {
+      const editBookStm = db.prepare('UPDATE Books SET title = ?, author = ?, comment = ? WHERE (bookID = ?)');
+
+      const result = editBookStm.run(book.title, book.author, book.comment, book.bookID);
+      return result;
+   } catch (err) {
+      throw err;
+   }
+};
+
+function shutdown() {
+   try {
+      db.close();
+      console.log('Έκλεισε η σύνδεση με την SQLite.');
+   } catch (err) {
+      throw err;
+   }
+}
+
+export { getBooks, addBook, getBook, editBook, deleteBook, shutdown };

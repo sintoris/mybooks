@@ -64,6 +64,27 @@ app.use((err, req, res, next) => {
 console.log(process.env.PORT);
 // Εκκίνηση του εξυπηρετητή
 const PORT = process.env.PORT || 3003;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
    console.log(`Συνδεθείτε στη σελίδα: http://localhost:${PORT}`);
 });
+
+function shutdown(signal) {
+   console.log(`\n Κλείνω λόγω ${signal}...`);
+ 
+   server.close(async () => {
+     console.log('Ο εξυπηρετητής HTTP έκλεισε.');
+ 
+     try {
+      const model = await import(`./model/model-${process.env.DB_MODEL}.mjs`);
+
+       await model.shutdown();
+     } catch (err) {
+       console.error('Error during shutdown:', err);
+     } finally {
+       process.exit(0);
+     }
+   });
+ }
+ 
+ process.on('SIGINT', shutdown);   // Ctrl+C
+ process.on('SIGTERM', shutdown);  // kill or Docker stop

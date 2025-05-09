@@ -1,11 +1,12 @@
-// import dotenv from 'dotenv';
-
-// dotenv.config();
-console.log(`process.env.DB_MODEL= ${process.env.DB_MODEL}`);
+import dotenv from 'dotenv';
+//
+dotenv.config();
 const model = await import(`../model/model-${process.env.DB_MODEL}.mjs`);
 
-function getBooks(req, res, next) {
-   const books = model.getBooks();
+/* async only necessary when using an async api. on synchronous api, 
+e.g. better-sqlite3, it will be ignored */
+async function getBooks(req, res, next) {
+   const books = await model.getBooks();
    res.render('books', { data: books });
 }
 
@@ -13,14 +14,14 @@ function showAddBookForm(req, res) {
    res.render('create', { data: {} });
 }
 
-function addBook(req, res) {
+async function addBook(req, res) {
    const newBook = {
       title: req.body.title,
       author: req.body.author,
       comment: req.body.comment,
    };
    try {
-      const result = model.addBook(newBook);
+      const result = await model.addBook(newBook);
       res.redirect('/books');
    } catch (err) {
       console.error(err);
@@ -44,12 +45,12 @@ function about(req, res) {
    res.render('about');
 }
 
-function showEditBookForm(req, res) {
+async function showEditBookForm(req, res) {
    const id = req.params.bookID;
    if (id) {
       try {
-         const book = model.getBook(id);
-         res.render('edit', { data: book[0] });
+         const book = await model.getBook(id);
+         res.render('edit', { data: book });
       } catch (err) {
          console.error(err);
          throw new Error('Error retrieving book');
@@ -57,7 +58,7 @@ function showEditBookForm(req, res) {
    }
 }
 
-function editBook(req, res) {
+async function editBook(req, res) {
    const id = req.params.id;
    const book = {
       title: req.body.title,
@@ -66,7 +67,7 @@ function editBook(req, res) {
       bookID: id,
    };
    try {
-      model.editBook(book);
+      await model.editBook(book);
       res.redirect('/books');
    } catch (err) {
       console.error(err);

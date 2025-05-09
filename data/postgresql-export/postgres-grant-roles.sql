@@ -1,0 +1,3 @@
+GRANT  CONNECT ON DATABASE postgres TO "booksUser";
+GRANT  USAGE   ON SCHEMA books TO "booksUser";
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA books TO "booksUser" ;
