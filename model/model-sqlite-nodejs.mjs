@@ -4,6 +4,8 @@ node must be ran as "node --experimental-sqlite <filename>"
 */
 import { DatabaseSync } from 'node:sqlite';
 
+console.log('Using node:sqlite module');
+
 const db = new DatabaseSync(`${import.meta.dirname}/../data/books.db`);
 
 const getBooks = () => {

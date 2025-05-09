@@ -6,6 +6,8 @@ npm install sequelize
 import { Sequelize, DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
 
+console.log('model-sequelize.mjs');
+
 dotenv.config();
 
 const sequelize = new Sequelize(process.env.PG_DATABASE, process.env.PG_USER, process.env.PG_PASSWORD, {

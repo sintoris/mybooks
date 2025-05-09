@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
 
+console.log('model-mongodb.mjs');
+
 dotenv.config();
 
 const client = new MongoClient(process.env.MONGO_CONNECTION);

@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 //
 dotenv.config();
+
 const model = await import(`../model/model-${process.env.DB_MODEL}.mjs`);
 
 /* async only necessary when using an async api. on synchronous api, 

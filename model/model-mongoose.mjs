@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
+console.log('Χρησιμοποιώ model-mongoose.mjs');
+
 dotenv.config();
 
 // Connect to mongodb

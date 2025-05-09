@@ -4,13 +4,14 @@ npm install better-sqlite3
 */
 import { default as bettersqlite3 } from 'better-sqlite3';
 
+console.log('Using better-sqlite3 module');
+
 const db = new bettersqlite3(`${import.meta.dirname}/../data/books.db`, { fileMustExist: true });
 
-// Prepared statements
-// ανάκτηση όλων των βιβλίων του χρήστη από τη βάση δεδομένων
 
 const getBooks = () => {
    try {
+
       const getBooksStm = db.prepare('SELECT * FROM Books ORDER BY title');
 
       return getBooksStm.all();

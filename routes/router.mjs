@@ -1,22 +1,11 @@
 import express from 'express';
 import * as controller from '../controller/controller.mjs'; // import the controller
-   
+
 const router = express.Router();
-// const bookList = new BookList();
 
-
-const logout = (req, res) => {
-   console.log('logout...', req.session);
-   req.session.destroy((err) => {
-      if (err) {
-         return res.redirect('/');
-      }
-      res.clearCookie('sid');
-      res.redirect('/');
-   });
-};
-
-router.get('/', (req, res, next) => {res.redirect("/books")}); // show user if connected
+router.get('/', (req, res, next) => {
+   res.redirect('/books');
+}); 
 router.get('/books', controller.getBooks); // GET /books
 router.get('/create', controller.showAddBookForm); // GET /create
 router.post('/create', controller.addBook); // POST /create

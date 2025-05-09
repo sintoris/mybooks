@@ -4,6 +4,9 @@ npm install pg
 */
 import { Pool } from 'pg';
 
+console.log('model-postgres.mjs');
+
+
 // Configure the PostgreSQL connection pool
 const pool = new Pool({
    user: process.env.PG_USER,
@@ -17,7 +20,7 @@ const pool = new Pool({
 const getBooks = async () => {
    try {
       const result = await pool.query('select * from books."Books" b ORDER BY b.title');
-      return result.rows;
+      return result.rbows;
    } catch (err) {
       throw err;
    }
